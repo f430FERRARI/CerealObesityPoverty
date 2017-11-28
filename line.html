@@ -35,9 +35,9 @@
       var main = d3.select("body").append("div"); 
 
       // Line chart dimensions
-      var margin = {top: 20, right: 220, bottom: 30, left: 50};
-      var width = 1100 - margin.left - margin.right;
-      var height = 500 - margin.top - margin.bottom;
+      var lineChartMargin = {top: 20, right: 220, bottom: 30, left: 50};
+      var lineChartWidth = 1100 - lineChartMargin.left - lineChartMargin.right;
+      var lineChartHeight = 500 - lineChartMargin.top - lineChartMargin.bottom;
 
       // Line chart content settings 
       var defaultState = "AL" 
@@ -50,16 +50,16 @@
 
       // Create line chart line chart SVG frame
       var lineChartSvg = main.append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", lineChartWidth + lineChartMargin.left + lineChartMargin.right)
+        .attr("height", lineChartHeight + lineChartMargin.top + lineChartMargin.bottom)
         .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + lineChartMargin.left + "," + lineChartMargin.top + ")");
 
       // Configure the x, y and z ranges 
       var x = d3.scale.linear()
-        .range([0, width]);
+        .range([0, lineChartWidth]);
       var y = d3.scale.linear()
-        .range([height, 0]);
+        .range([lineChartHeight, 0]);
       var color = d3.scale.category10(); 
 
       // Configure the x and y axis 
@@ -142,7 +142,7 @@
         // Create x-axis
         lineChartSvg.append("g")
           .attr("class", "x axis")
-          .attr("transform", "translate(0," + height + ")")
+          .attr("transform", "translate(0," + lineChartHeight + ")")
           .call(xAxis);
 
         // Create y-axis
