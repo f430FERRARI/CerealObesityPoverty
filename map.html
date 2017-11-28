@@ -48,12 +48,12 @@
     <script> 
     
     //Width and height of map
-    var width = 960;
-    var height = 500;
+    var mapWidth = 960;
+    var mapHeight = 500;
 
     // D3 Projection
     var projection = d3.geo.albersUsa()
-      .translate([width/2, height/2])    // translate to center of screen
+      .translate([mapWidth/2, mapHeight/2])    // translate to center of screen
       .scale([1000]);          // scale things down so see entire US
             
     // Define path generator
@@ -62,16 +62,16 @@
 
         
     // Define linear scale for output
-    var color = d3.scale.linear()
+    var mapColors = d3.scale.linear()
       .range(["#00FF00", "#7FFF00", "#FFFF00", "#FF6900", "#FF0000"]); 
 
     var legendText = [ ">= 32%", ">= 27%", ">= 23%", ">= 19%", ">= 15%" ]; 
 
     //Create SVG element and append map to the SVG
-    var svg = d3.select("body")
+    var mapSvg = d3.select("body")
       .append("svg")
-      .attr("width", width)
-      .attr("height", height);
+      .attr("width", mapWidth)
+      .attr("height", mapHeight);
             
     // Append Div for tooltip to SVG
     var div = d3.select("body")
@@ -82,7 +82,7 @@
     // Load in my states data!
     d3.csv("obesity_poverty.csv", function(data) {
       
-      color.domain([19, 23, 27, 31, 35]); // setting the range of the input data  // TODO: Check ranges by putting in tooltip
+      mapColors.domain([19, 23, 27, 31, 35]); // setting the range of the input data  // TODO: Check ranges by putting in tooltip
 
       // Load GeoJSON data and merge with states data
       d3.json("us-states.json", function(json) {
@@ -112,7 +112,7 @@
         }
             
         // Bind the data to the SVG and create one path per GeoJSON feature
-        svg.selectAll("path")
+        mapSvg.selectAll("path")
           .data(json.features)
           .enter()
           .append("path")
@@ -125,7 +125,7 @@
 
             if (value) {
             //If value exists…
-            return color(value);
+            return mapColors(value);
             } else {
             //If value is undefined…
             return "rgb(213,222,217)";
@@ -142,7 +142,7 @@
           .attr("width", 140)
           .attr("height", 200)
           .selectAll("g")
-          .data(color.domain().slice().reverse())
+          .data(mapColors.domain().slice().reverse())
           .enter()
           .append("g")
           .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
@@ -150,7 +150,7 @@
             legend.append("rect")
               .attr("width", 18)
               .attr("height", 18)
-              .style("fill", color);
+              .style("fill", mapColors);
 
             legend.append("text")
               .data(legendText)
