@@ -9,13 +9,19 @@
 
       body { 
         font-family: 'Raleway', sans-serif;
-      }  
+      }   
+
+      p {  
+        margin: 0;  
+      }
 
     </style>
   </head>
   <body>
     <script>  
 
+      // Create main div for detail
+      var detailMainDiv = d3.select("body").append("div"); 
 
       function filterCereal(cerealName, data) { 
         var cereal = data.filter(function(d) {  
@@ -25,22 +31,28 @@
         return cereal[0];
       }
 
-      function displayCereal(cereal) {  
-        var main = d3.select("body").append("div"); 
-
+      function displayCereal(cereal) { 
+              console.log("Cereal Boxes/" + cereal + ".png");
+  
         for (var key in cereal) {
           if (cereal.hasOwnProperty(key)) {
-            main.append("p") 
+            detailMainDiv.append("p") 
               .text(key + ": " + cereal[key]);           
           } 
         }
+      }
 
-        console.log(cereal);
+      function displayCerealBox(cereal) { 
+        detailMainDiv.append("img") 
+          .attr("src", "Cereal Boxes/" + cereal.Brand + ".png") 
+          .attr("height", "200") 
+          .attr("width", "150");
+
       }
 
       d3.csv("cereal.csv", function(data){  
         var cereal = filterCereal("Apple Jacks", data);
-
+        displayCerealBox(cereal);
         displayCereal(cereal);
       });
     </script>

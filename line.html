@@ -31,8 +31,8 @@
   </head>
   <body>
     <script> 
-      // Create main div
-      var main = d3.select("body").append("div"); 
+      // Create main line chart div
+      var lineChartMainDiv = d3.select("body").append("div"); 
 
       // Line chart dimensions
       var lineChartMargin = {top: 20, right: 220, bottom: 30, left: 50};
@@ -44,12 +44,12 @@
       var defaultCategory = "GEN";
 
       // Create dropdown
-      var select = main.append('select')  
+      var select = lineChartMainDiv.append('select')  
         .attr('id', 'dropdown')
         .on('change',onDropdownChange);
 
       // Create line chart line chart SVG frame
-      var lineChartSvg = main.append("svg")
+      var lineChartSvg = lineChartMainDiv.append("svg")
         .attr("width", lineChartWidth + lineChartMargin.left + lineChartMargin.right)
         .attr("height", lineChartHeight + lineChartMargin.top + lineChartMargin.bottom)
         .append("g")
