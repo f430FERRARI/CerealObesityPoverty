@@ -89,7 +89,7 @@
       } 
 
       #detail img { 
-        margin: 20px auto 15px auto;
+        margin: 0px auto 15px auto;
       }
 
       /**************************** LINE CHART *****************************/
@@ -398,7 +398,7 @@
 
       // Configure the line 
       var line = d3.svg.line()
-        .interpolate("basis")
+        .interpolate("linear")
         .x(function(d) { return x(d.YearStart); })
         .y(function(d) { return y(d.Data_Value); });
 
