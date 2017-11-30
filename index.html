@@ -99,7 +99,7 @@
       } 
 
       #detail {  
-        width: 165px;   
+        width: 170px;   
         display: inline-block;  
       } 
 
@@ -146,7 +146,26 @@
 
       #stratHeaderDiv h2 { 
         margin-bottom: 0px;
+      }  
+
+      div.lineChartTooltip { 
+        position: absolute;     
+        text-align: center;     
+        width: 60px;          
+        height: 28px;         
+        padding: 2px;       
+        font: 12px sans-serif;    
+        background: lightsteelblue; 
+        border: 0px;    
+        border-radius: 8px;     
+        pointer-events: none;      
       } 
+
+
+      .lineChartTooltip h1 { 
+        font-size: 14px; 
+        margin: 0.5 auto 0 auto;
+      }
 
     </style>
   </head>
@@ -252,8 +271,6 @@
 
             // Grab State Name
             var dataState = data[i].State;
-
-            console.log(data[i])
 
             // Grab data value 
             var good = +data[i].Good;
@@ -477,7 +494,12 @@
       var line = d3.svg.line()
         .interpolate("linear")
         .x(function(d) { return x(d.YearStart); })
-        .y(function(d) { return y(d.Data_Value); });
+        .y(function(d) { return y(d.Data_Value); }); 
+
+      // Define the div for the tooltip
+      var lineTooltipDiv = d3.select("#lineChart").append("div") 
+          .attr("class", "lineChartTooltip")       
+          .style("opacity", 0);
 
       // Event handler for the selecting an item from the category dropdown
       function onDropdownChange() {  
@@ -505,6 +527,25 @@
         }).entries(filteredData);
 
         return groupedData;
+      } 
+
+      function mapScatterPlotData(data) {  
+        var scatterplotArray = new Array(); 
+        for (var key0 in data) {  
+          var d = data[key0];
+          for (var key in d.values) { 
+              var obj = d.values[key]; 
+              console.log(obj);   
+              var dataPoint = { 
+                Year: obj.YearStart, 
+                Value: obj.Data_Value
+              };
+              scatterplotArray.push(dataPoint)
+          }
+          
+        }  
+
+        return scatterplotArray;
       }
 
       // Returns the full name for a stratification category ID
@@ -528,7 +569,7 @@
       // Render and create the chart
       function render(data){   
         // Parse and format data
-        var parsedData = parseData(defaultState, defaultStratification, data);
+        var parsedData = parseData(defaultState, defaultStratification, data); 
 
         // Set the domain for x, y and z 
         color.domain(parsedData.map(function(d){ d.key }));
@@ -566,7 +607,30 @@
         strat.append("path")
           .attr("class", "line")
           .attr("d", function(d) { return line(d.values); })
-          .style("stroke", function(d) { return color(d.key); });
+          .style("stroke", function(d) { return color(d.key); }); 
+
+        // Add the scatterplot
+        var scatterplotData = mapScatterPlotData(parsedData);  
+        lineChartSvg.selectAll("dot")  
+          .data(scatterplotData).enter() 
+          .append("circle") 
+            .attr("r", 5)   
+            .attr("cx", function(d) {   
+              return x(d.Year);     })
+            .attr("cy", function(d) { return y(d.Value) })
+            .on("mouseover", function(d) {    
+              lineTooltipDiv.transition()    
+                .duration(200)    
+                .style("opacity", .9);    
+              lineTooltipDiv.html("<h1>" + d.Value + "%</h1>")  
+                .style("left", (d3.event.pageX) + "px")   
+                .style("top", (d3.event.pageY - 28) + "px");  
+              })          
+            .on("mouseout", function(d) {   
+              lineTooltipDiv.transition()    
+                .duration(500)    
+                .style("opacity", 0); 
+            });
 
         // Add labels to each line
         strat.append("text")
