@@ -48,6 +48,13 @@
       button { 
         width: 225px; 
         height: 25px;  
+      } 
+
+      #stateLabel {  
+        font-size: 18pt;
+        text-align: center; 
+        margin-bottom: 0px; 
+        margin-top: 30px;
       }
 
       /******************************* MAP *********************************/
@@ -203,7 +210,11 @@
         .text("A visualization of cereal and its relationship with obesity and poverty");
 
       var buttonDiv = d3.select("body").append("div") 
-        .attr("id", "buttonDiv");
+        .attr("id", "buttonDiv"); 
+
+      var stateLabel = d3.select("body").append("p") 
+        .attr("id", "stateLabel") 
+        .html("<strong>Currently Selected State: </strong>" + defaultState);
 
       // Create buttons 
       var obesityButton = buttonDiv.append("button") 
@@ -233,7 +244,7 @@
         });      
 
       var topDiv = d3.select("body").append("div") 
-        .attr("id", "topDiv");
+        .attr("id", "topDiv"); 
 
       /**************************** MAP ******************************/
 
@@ -355,6 +366,7 @@
 
               // Get the new state  
               defaultState = d.properties.name; 
+              stateLabel.html("<strong>Currently Selected State: </strong>" + defaultState);
 
               // Render the new chart
               d3.csv("obesity_survey_multiyear.csv", render); 
